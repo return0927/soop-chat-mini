@@ -22,7 +22,7 @@ export class SoopChat {
   private readonly channelId: string;
   private chatNo: string;
   private client: WebSocket | null;
-  private intervalId: number = -1;
+  private intervalId: NodeJS.Timeout | null = null;
 
   public onMessage: ((msg: ChatMessage) => void) | null = null;
 
@@ -34,7 +34,8 @@ export class SoopChat {
 
   public async build() {
     const stream = await this._fetchStreamInfo();
-    if (!stream) throw new Error('스트림 정보가 없습니다');
+    if (!stream || !stream.CHANNEL.CHDOMAIN)
+      throw new Error('스트림 정보가 없습니다');
 
     const url = this._buildUrl(stream);
     console.log(`Connecting to ${url}`);
@@ -52,7 +53,7 @@ export class SoopChat {
   }
 
   private _stopPing(): void {
-    if (this.intervalId !== -1) {
+    if (!this.intervalId) {
       console.log('PING STOPPED');
       clearInterval(this.intervalId);
     }
