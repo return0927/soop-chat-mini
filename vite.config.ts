@@ -11,6 +11,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePluginRadar({
+      enableDev: true,
       analytics: {
         id: process.env.VITE_GOOGLE_ANALYTICS || '',
       },
