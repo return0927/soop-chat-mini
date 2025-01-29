@@ -1,17 +1,5 @@
 import { ChatMessage, StreamMeta } from '../types/stream.ts';
-
-type ResponseType = {
-  CHANNEL: {
-    CHDOMAIN: string;
-    CHPT: string;
-    CHATNO: string;
-    BJID: string;
-    BJNICK: string;
-    TITLE: string;
-    CATE: string;
-    CATEGORY_TAGS: string[];
-  };
-};
+import { PlayerLiveApiResponse } from '../types/api.ts';
 
 const SEP = '\x0c';
 const ESC = '\x1b\t';
@@ -141,8 +129,6 @@ export class SoopChat {
     return new Promise((resolve) => {
       this._send(client, ['000100000600', '', '', '16', '']);
       setTimeout(() => {
-        console.log(this.chatNo);
-        console.log(chatNoLength);
         this._send(client, [
           `0002${chatNoLength}00`,
           this.chatNo,
@@ -165,13 +151,13 @@ export class SoopChat {
     client.send(this.encoder.encode(ESC + data.join(SEP)));
   }
 
-  private _buildUrl({ CHANNEL }: ResponseType): string {
+  private _buildUrl({ CHANNEL }: PlayerLiveApiResponse): string {
     const { CHDOMAIN, CHPT, BJID, CHATNO } = CHANNEL;
     this.chatNo = CHATNO;
     return `wss://${CHDOMAIN}:${+CHPT + 1}/Websocket/${BJID}`;
   }
 
-  private async _fetchStreamInfo(): Promise<ResponseType> {
+  private async _fetchStreamInfo(): Promise<PlayerLiveApiResponse> {
     const resp = await fetch('/afreeca/player_live_api.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
