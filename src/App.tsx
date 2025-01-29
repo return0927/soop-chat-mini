@@ -9,11 +9,10 @@ function App() {
   const scrollAmount = ((v) => {
     return v !== null && +v > 0 ? +v : 150;
   })(params.get('scrollAmount'));
-  const scrollOffset =
-    ((v): number => {
-      if (v && !isNaN(+v)) return +v;
-      throw new Error(`scrollOffset=${v}(은)는 올바른 숫자가 아닙니다.`);
-    })(params.get('scrollOffset')) || 0;
+  const scrollOffset = ((v): number => {
+    if (v && +v && !isNaN(+v)) return +v;
+    throw new Error(`scrollOffset=${v}(은)는 올바른 숫자가 아닙니다.`);
+  })(params.get('scrollOffset') || 0);
 
   const [errorMessage, setErrorMessage] = useState(
     '채널이 온라인이 되기를 기다리는 중...'
