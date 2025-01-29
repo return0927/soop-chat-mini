@@ -2,7 +2,6 @@ import SocketHolder from './components/SocketHolder.tsx';
 import { useEffect, useState } from 'react';
 import { ChatMessage } from './libs/SoopChat.ts';
 import Marquee from 'react-fast-marquee';
-import { clearInterval } from 'node:timers';
 
 function App() {
   const params = new URL(window.location.href).searchParams;
@@ -16,15 +15,20 @@ function App() {
   );
   const [messages, setMessages] = useState<string[][]>([]);
   const [refreshTimer, setRefreshTimer] = useState<NodeJS.Timeout | null>(null);
+  const [lastRandom, setLastRandom] = useState<number>(-1.0);
 
+  const getBalancedRandom = (preset = Math.random()): number => {
+    if (Math.abs(lastRandom - preset) < 0.1) {
+      return Math.abs(lastRandom - (1 - preset)) < 0.1
+        ? getBalancedRandom()
+        : getBalancedRandom(1 - preset);
+    }
+
+    setLastRandom(() => preset);
+    return preset;
+  };
   const handler = (message: ChatMessage) => {
-    setMessages((arr) => [
-      ...arr,
-      [
-        message.message,
-        Math.floor(Math.random() * window.innerHeight - 40) + 20 + 'px',
-      ],
-    ]);
+    setMessages((arr) => [...arr, [message.message, '' + getBalancedRandom()]]);
   };
   const errorConsumer = (message: string) => {
     setErrorMessage(message);
@@ -72,12 +76,12 @@ function App() {
             key={`${message}-${position}`}
             style={{
               position: 'fixed',
-              top: position,
+              top: `calc((100vh - 3em) * ${position} + 1em)`,
               left: `-${message.length * 16}px`,
               width: `calc(100% + ${message.length * 16}px)`,
             }}
             delay={0.1}
-            speed={scrollAmount}
+            speed={scrollAmount + 50 * (+position - 0.5)}
             loop={1}
             onFinish={() => {
               setMessages((arr) =>
