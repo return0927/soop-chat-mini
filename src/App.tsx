@@ -1,7 +1,7 @@
 import SocketHolder from './components/SocketHolder.tsx';
 import { useEffect, useState } from 'react';
-import { ChatMessage } from './libs/SoopChat.ts';
 import Marquee from 'react-fast-marquee';
+import { ChatMessage, StreamMeta } from './types/stream.ts';
 
 function App() {
   const params = new URL(window.location.href).searchParams;
@@ -20,6 +20,7 @@ function App() {
   const [messages, setMessages] = useState<string[][]>([]);
   const [lastRandom, setLastRandom] = useState<number>(-1.0);
   const setRefreshTimer = useState<NodeJS.Timeout | null>(null)[1];
+  const [title, setTitle] = useState<string>('SOOP 미니 채팅');
 
   const getBalancedRandom = (preset = Math.random()): number => {
     if (Math.abs(lastRandom - preset) < 0.1) {
@@ -36,6 +37,9 @@ function App() {
   };
   const errorConsumer = (message: string) => {
     setErrorMessage(message);
+  };
+  const streamMetaHandler: (args: StreamMeta) => void = (args) => {
+    setTitle(() => `SOOP 미니 채팅 - ${args.nick}(${args.id})`);
   };
 
   useEffect(() => {
@@ -59,10 +63,13 @@ function App() {
 
   return (
     <div>
+      <title>{title}</title>
+
       {channelId ? (
         <SocketHolder
           channelId={channelId}
           handler={handler}
+          streamMetaHandler={streamMetaHandler}
           errorConsumer={errorConsumer}
         />
       ) : (

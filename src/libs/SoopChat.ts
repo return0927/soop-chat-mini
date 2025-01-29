@@ -1,16 +1,16 @@
+import { ChatMessage, StreamMeta } from '../types/stream.ts';
+
 type ResponseType = {
   CHANNEL: {
     CHDOMAIN: string;
     CHPT: string;
-    BJID: string;
     CHATNO: string;
+    BJID: string;
+    BJNICK: string;
+    TITLE: string;
+    CATE: string;
+    CATEGORY_TAGS: string[];
   };
-};
-
-export type ChatMessage = {
-  id: string;
-  nick: string;
-  message: string;
 };
 
 const SEP = '\x0c';
@@ -25,6 +25,7 @@ export class SoopChat {
   private intervalId: NodeJS.Timeout | undefined = undefined;
 
   public onMessage: ((msg: ChatMessage) => void) | null = null;
+  public onStreamMeta: ((meta: StreamMeta) => void) | null = null;
 
   constructor(channelId: string) {
     this.channelId = channelId;
@@ -39,6 +40,19 @@ export class SoopChat {
 
     const url = this._buildUrl(stream);
     console.log(`Connecting to ${url}`);
+
+    try {
+      const { BJID, BJNICK, CATE, CATEGORY_TAGS, TITLE } = stream.CHANNEL;
+      this.onStreamMeta?.({
+        id: BJID,
+        nick: BJNICK,
+        title: TITLE,
+        category: CATE,
+        categoryTags: CATEGORY_TAGS,
+      });
+    } catch (e: unknown) {
+      console.error('메타 정보를 받아오는데 실패함', e);
+    }
 
     this.client = new WebSocket(url, ['chat']);
     this.client.binaryType = 'arraybuffer';

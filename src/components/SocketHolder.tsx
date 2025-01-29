@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react';
-import { ChatMessage, SoopChat } from '../libs/SoopChat.ts';
+import { SoopChat } from '../libs/SoopChat.ts';
+import { ChatMessage, StreamMeta } from '../types/stream.ts';
 
 export default function SocketHolder({
   channelId,
   handler,
+  streamMetaHandler,
   errorConsumer,
 }: {
   channelId: string;
   handler: (message: ChatMessage) => void;
+  streamMetaHandler: (args: StreamMeta) => void;
   errorConsumer: (message: string) => void;
 }) {
   const [client, setClient] = useState<SoopChat>();
@@ -21,6 +24,7 @@ export default function SocketHolder({
     if (!client) return;
     (async () => {
       client.onMessage = handler;
+      client.onStreamMeta = streamMetaHandler;
       try {
         await client.build();
         errorConsumer('');
