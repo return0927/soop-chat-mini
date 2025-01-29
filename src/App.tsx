@@ -10,7 +10,7 @@ function App() {
     return v !== null && +v > 0 ? +v : 150;
   })(params.get('scrollAmount'));
   const scrollOffset = ((v): number => {
-    if (v && +v && !isNaN(+v)) return +v;
+    if (v && !isNaN(+v)) return +v;
     throw new Error(`scrollOffset=${v}(은)는 올바른 숫자가 아닙니다.`);
   })(params.get('scrollOffset') || 0);
 
