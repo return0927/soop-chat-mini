@@ -14,8 +14,8 @@ function App() {
     '채널이 온라인이 되기를 기다리는 중...'
   );
   const [messages, setMessages] = useState<string[][]>([]);
-  const [refreshTimer, setRefreshTimer] = useState<NodeJS.Timeout | null>(null);
   const [lastRandom, setLastRandom] = useState<number>(-1.0);
+  const setRefreshTimer = useState<NodeJS.Timeout | null>(null)[1];
 
   const getBalancedRandom = (preset = Math.random()): number => {
     if (Math.abs(lastRandom - preset) < 0.1) {

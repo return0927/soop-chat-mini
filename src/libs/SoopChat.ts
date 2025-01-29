@@ -22,7 +22,7 @@ export class SoopChat {
   private readonly channelId: string;
   private chatNo: string;
   private client: WebSocket | null;
-  private intervalId: NodeJS.Timeout | null = null;
+  private intervalId: NodeJS.Timeout | undefined = undefined;
 
   public onMessage: ((msg: ChatMessage) => void) | null = null;
 
