@@ -38,7 +38,7 @@ export class SoopChat {
       throw new Error('스트림 정보가 없습니다');
 
     const url = this._buildUrl(stream);
-    console.log(`Connecting to ${url}`);
+    console.timeLog(`Connecting to ${url}`);
 
     this.client = new WebSocket(url, ['chat']);
     this.client.binaryType = 'arraybuffer';
@@ -47,26 +47,26 @@ export class SoopChat {
 
   private _startPing(client: WebSocket): void {
     this.intervalId = setInterval(() => {
-      console.log('PING SENT');
+      console.timeLog('PING SENT');
       this._sendPing(client);
     }, 1000 * 60);
   }
 
   private _stopPing(): void {
     if (!this.intervalId) {
-      console.log('PING STOPPED');
+      console.timeLog('PING STOPPED');
       clearInterval(this.intervalId);
     }
   }
 
   private _cleanClient(): void {
     this._stopPing();
-    console.log('client cleaned-up');
+    console.timeLog('client cleaned-up');
   }
 
   private _attachEventHandlers(client: WebSocket) {
     client.onopen = () => {
-      console.log(`socket open`);
+      console.timeLog(`socket open`);
       this._sendHandshake(client).then(() => this._startPing(client));
     };
     client.onclose = (event: CloseEvent) => {
@@ -103,7 +103,7 @@ export class SoopChat {
           );
         });
       const command = bytes[0].slice(0, 4);
-      console.log(`socket message: (${command}): ${bytes}`);
+      console.debug(`socket message: (${command}): ${bytes}`);
 
       switch (command) {
         case '0005': {
