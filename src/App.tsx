@@ -48,6 +48,9 @@ function App() {
         return null;
       });
     }
+
+    /** BE CAREFUL IF NEW useState BEING USED */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorMessage]);
 
   return (
