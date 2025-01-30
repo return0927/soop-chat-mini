@@ -62,7 +62,7 @@ function App() {
   }, [errorMessage]);
 
   return (
-    <div>
+    <div className={'soop-chat'}>
       <title>{title}</title>
 
       {channelId ? (
@@ -91,8 +91,8 @@ function App() {
             style={{
               position: 'fixed',
               top: `calc((100vh - 3em) * ${position} + 1em)`,
-              left: `-${message.length * 16}px`,
-              width: `calc(100% + ${message.length * 16}px)`,
+              left: `-${message.length}em`,
+              width: `calc(100% + ${message.length}em)`,
             }}
             delay={0.1}
             speed={scrollAmount + scrollOffset * (+position - 0.5)}
