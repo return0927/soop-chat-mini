@@ -158,7 +158,7 @@ export class SoopChat {
   }
 
   private async _fetchStreamInfo(): Promise<PlayerLiveApiResponse> {
-    const resp = await fetch('/afreeca/player_live_api.php', {
+    const resp = await fetch('/proxy/afreeca/player_live_api.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: `bid=${this.channelId}`,

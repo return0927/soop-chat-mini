@@ -26,9 +26,10 @@ export default defineConfig({
     hmr: false,
     allowedHosts: ['soop-chat-mini.go9.ma'],
     proxy: {
-      '/afreeca': {
+      '/proxy': {
         target: 'https://live.sooplive.co.kr/',
         changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/proxy/, ''),
       },
     },
   },
