@@ -126,20 +126,6 @@ function App() {
   }, [channelId]);
 
   useEffect(() => {
-    setInterval(() => {
-      handler({
-        id: 'foobar1234',
-        nick: 'TestUser',
-        message:
-          '잘한다 ' +
-          arrayChoice(['/sesekki/', '/sesehi/', '/seheart/', '/segoo/']) +
-          arrayChoice(['/sesekki/', '/sesehi/', '/seheart/', '/segoo/']) +
-          '!!',
-      });
-    }, 100);
-  }, []);
-
-  useEffect(() => {
     emoteMapHolder.emoteMap = emoteMap;
   }, [emoteMap]);
 
